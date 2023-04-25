@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script>
+      let questionCounter = 0;
+      let choiceCounter = 0;
+
+      function addChoiceField(questionContainer) {
+        const choiceContainer = questionContainer.querySelector("#choice-container");
+        const questionNumber = questionContainer.querySelector("input[name^='question-']").name.split("-")[1];
+        const newChoiceField = document.createElement("div");
+        newChoiceField.innerHTML = `
+        <input type="radio" name="right-choice-${questionNumber}">
+        <input type="text" name="choice-${choiceCounter}-${questionNumber}">
+        <button type="button" onclick="this.parentNode.remove()">
+            <img src="minus-icon.png" alt="Remove Choice">
+        </button>
+        `;
+        choiceContainer.appendChild(newChoiceField);
+        choiceCounter++;
+      }
+
+      function addQuestionField() {
+        const form = document.getElementById("test-form");
+        const newQuestionField = document.createElement("div");
+        newQuestionField.innerHTML = `
+        <div class="question-container">
+        <button type="button" onclick="this.parentNode.remove()">
+            <img src="minus-icon.png" alt="Remove Question">
+        </button>
+        <label>Question:</label>
+        <input type="text" name="question-${questionCounter}">
+        <div id="choice-container"></div>
+        <button type="button" onclick="addChoiceField(this.parentNode)">Add Choice</button>
+        </div>
+        `;
+        form.appendChild(newQuestionField);
+        choiceCounter = 0;
+        questionCounter++;
+      }
+
+    </script>
+    <style>
+    #test-form {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px #aaa;
+    }
+
+    #test-form button,
+    #test-form input[type="text"],
+    #test-form label {
+      margin-bottom: 10px;
+    }
+
+    .question-container,
+    .question-container #choice-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px #aaa;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    .question-container label,
+    .question-container input[type="text"],
+    .question-container input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    #test-form input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    #test-form input[type="submit"]:hover {
+      background-color: #3e8e41;
+      cursor: pointer;
+    }
+  </style>
+
+  </head>
+  <body>
+    <form id="test-form" method="post">
+      {% csrf_token %}
+      <button type="button" onclick="addQuestionField()">Add Question</button>
+      <label>Subject Title:</label>
+      <input type="text" name="subject-title">
+      <label>Theme:</label>
+      <input type="text" name="theme">
+      <input type="submit" value="Yuborish">
+      <div class="question-container">
+        <button type="button" onclick="this.parentNode.remove()">
+          <img src="minus-icon.png" alt="Remove Question">
+        </button>
+        <label>Question:</label>
+        <input type="text" name="question-${questionCounter}">
+        <div id="choice-container"></div>
+        <button type="button" onclick="addChoiceField(this.parentNode)">Add Choice</button>
+      </div>
+    </form>
+  </body>
+</html>
